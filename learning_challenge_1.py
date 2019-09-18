@@ -47,13 +47,15 @@ def adder(inputdata):
     qc.measure(q[5],c[0])
     qc.measure(q[8],c[1])
 
+    #qc.draw(filename='lc1_circuit.png')
+
     backend = Aer.get_backend('qasm_simulator')
     job = execute(qc, backend, shots=1000)
     result = job.result()
     count =result.get_counts()
     for key in count:
         print('Input:' + str(inputdata) + ' Output: ' + str(key))
-    qc.draw('lc1_circuit.png')
+    
 
     calculate_cost(qc)
     
