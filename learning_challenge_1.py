@@ -13,7 +13,7 @@ def calculate_cost(qc):
 
 # Define registers and a quantum circuit
 def adder(inputdata):
-    q = QuantumRegister(9)
+    q = QuantumRegister(8)
     c = ClassicalRegister(2)
     qc = QuantumCircuit(q,c)
 
@@ -41,13 +41,12 @@ def adder(inputdata):
     qc.barrier(q)
     XOR(2,3,5)
     AND(2,3,6)
-    AND(0,1,7)
     qc.barrier(q)
-    OR(6,7,8)
+    OR(4,6,7)
     qc.measure(q[5],c[0])
-    qc.measure(q[8],c[1])
+    qc.measure(q[7],c[1])
 
-    #qc.draw(filename='lc1_circuit.png')
+    qc.draw(output='mpl',filename='lc1_circuit.png')
 
     backend = Aer.get_backend('qasm_simulator')
     job = execute(qc, backend, shots=1000)
