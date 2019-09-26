@@ -2,6 +2,8 @@ from qiskit import QuantumRegister, ClassicalRegister, QuantumCircuit
 from qiskit import IBMQ, Aer, execute
 from qiskit.transpiler import PassManager
 from qiskit.transpiler.passes import Unroller
+import json
+import numpy as np
 
 # Calculate the cost of a circuit
 def calculate_cost(qc):
@@ -9,7 +11,8 @@ def calculate_cost(qc):
     pm = PassManager(pass_)
     new_circuit = pm.run(qc) 
     structure = new_circuit.count_ops()
-    print('Cost: ' + str(structure['u3']+structure['cx']*10))
+    #print('Cost: ' + str(structure['u3']+structure['cx']*10))
+    return structure
 
 # Define registers and a quantum circuit
 def adder(inputdata):
@@ -46,22 +49,37 @@ def adder(inputdata):
     qc.measure(q[5],c[0])
     qc.measure(q[7],c[1])
 
-    qc.draw(output='mpl',filename='lc1_circuit.png')
+    #qc.draw(output='mpl',filename='lc1_circuit.png')
 
     backend = Aer.get_backend('qasm_simulator')
     job = execute(qc, backend, shots=1000)
     result = job.result()
     count =result.get_counts()
     for key in count:
-        print('Input:' + str(inputdata) + ' Output: ' + str(key))
-    
+        #print('Input:' + str(inputdata) + ' Output: ' + str(key))
+        print(key+', ', end='')
+    struct_ = calculate_cost(qc)
+    return struct_
 
-    calculate_cost(qc)
-    
-# TEST the circuit for all inputs    
+# TEST the circuit for all inputs
+out = np.zeros(8)    
 for i in range(2):
     for j in range(2):
         for k in range(2):
-            adder([i,j,k])
+            if [i,j,k] == [0,0,0]:
+                structure = adder([i,j,k])
+            else:
+                adder([i,j,k])
+print('')
+'''
+# Print results to txt
+with open('wk1_output.txt', 'w') as f:
+    f.write(json.dumps(structure))
+'''
+
+
+
+
+
 
 

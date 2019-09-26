@@ -5,9 +5,9 @@ from qiskit.transpiler import PassManager
 from qiskit.transpiler.passes import Unroller
 import numpy as np
 def phase_oracle(circuit, register,oracle_register):
-	# Cost: 73
-	# u3: 13
-	# cx: 6
+    # Cost: 73
+    # u3: 13
+    # cx: 6
     circuit.h(oracle_register)
     circuit.x(register[0])
     circuit.ccx(register[0],register[1],oracle_register)
