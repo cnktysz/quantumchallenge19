@@ -4,6 +4,7 @@ from qiskit import QuantumCircuit, ClassicalRegister, QuantumRegister, execute
 from qiskit.transpiler import PassManager
 from qiskit.transpiler.passes import Unroller
 import numpy as np
+import json
 def phase_oracle(circuit, register,oracle_register):
     # Cost: 73
     # u3: 13
@@ -28,8 +29,9 @@ def calculate_cost(qc):
     pm = PassManager(pass_)
     new_circuit = pm.run(qc) 
     structure = new_circuit.count_ops()
-    print(structure)
-    print('Cost: ' + str(structure['u3']+structure['cx']*10))    
+    #print(structure)
+    #print('Cost: ' + str(structure['u3']+structure['cx']*10))  
+    return structure  
 
 qr = QuantumRegister(3)
 cr = ClassicalRegister(3)
@@ -47,12 +49,19 @@ backend = BasicAer.get_backend('qasm_simulator')
 shots = 1024
 results = execute(groverCircuit, backend=backend, shots=shots).result()
 answer = results.get_counts()
-print(answer)
-	
-calculate_cost(groverCircuit)
+
+# Print the most probable output
+sorted(answer.items(), key=lambda x: x[1], reverse=True)
+out = list(answer.keys())[0]
+print(out)
+
+struct_ = calculate_cost(groverCircuit)
 # Total Cost: 92 
 # u3: 22
 # cx: 7
+
+with open('wk2_output.txt', 'w') as f:
+    f.write(json.dumps(struct_))
 
 
 
