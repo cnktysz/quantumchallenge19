@@ -3,7 +3,6 @@ from qiskit import IBMQ, Aer, execute
 from qiskit.transpiler import PassManager
 from qiskit.transpiler.passes import Unroller
 import json
-import numpy as np
 
 # Calculate the cost of a circuit
 def calculate_cost(qc):
@@ -62,7 +61,6 @@ def adder(inputdata):
     return struct_
 
 # TEST the circuit for all inputs
-out = np.zeros(8)    
 for i in range(2):
     for j in range(2):
         for k in range(2):
